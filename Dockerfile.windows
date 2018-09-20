@@ -1,0 +1,21 @@
+#escape=`
+FROM golang:1.10.4-nanoserver-sac2016 as builder
+
+COPY . /go/src/github.com/pingcap/tidb
+
+WORKDIR /go/src/github.com/pingcap/tidb/
+
+RUN set GOPATH='C:\go\src\github.com\pingcap\tidb\_vendor;C:\go'; `  
+    go build -o bin/goyacc.exe parser/goyacc/main.go; `
+    bin\goyacc -o parser\parser.go parser\parser.y; `
+    go build -o bin\tidb-server.exe tidb-server\main.go
+
+# TiDB
+FROM microsoft/nanoserver:sac2016
+
+EXPOSE 4000
+
+WORKDIR /
+ENTRYPOINT ["/tidb-server"]
+
+COPY --from=builder /go/src/github.com/pingcap/tidb/bin/tidb-server.exe /tidb-server.exe

@@ -437,6 +437,7 @@ func createServer() {
 }
 
 func setupSignalHandler() {
+	/*
 	usrDefSignalChan := make(chan os.Signal, 1)
 	signal.Notify(usrDefSignalChan, syscall.SIGUSR1)
 	go func() {
@@ -449,6 +450,7 @@ func setupSignalHandler() {
 			}
 		}
 	}()
+	*/
 
 	closeSignalChan := make(chan os.Signal, 1)
 	signal.Notify(closeSignalChan,
